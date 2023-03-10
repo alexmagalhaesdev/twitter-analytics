@@ -21,8 +21,8 @@ project/target/
 __pycache__/
 
 # Ignorar arquivos relacionados ao Airflow
-airflow/
-*.airflowignore
+# airflow/
+# *.airflowignore
 
 # Ignorar arquivos relacionados ao Spark
 *.spark-events/
