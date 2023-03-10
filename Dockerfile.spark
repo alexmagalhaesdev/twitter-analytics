@@ -1,0 +1,42 @@
+FROM bitnami/spark:3
+
+USER root
+
+# Instalação das dependências do Scala
+RUN apt-get update && \
+    apt-get install -y wget && \
+    rm -rf /var/lib/apt/lists/*
+
+# Adiciona a instalação do Scala 2.12
+RUN wget https://downloads.lightbend.com/scala/2.12.15/scala-2.12.15.tgz && \
+    tar -zxvf scala-2.12.15.tgz && \
+    mv scala-2.12.15 /usr/share/scala && \
+    rm scala-2.12.15.tgz && \
+    export PATH=$PATH:/usr/share/scala/bin
+
+# Instalação do sbt
+RUN wget https://github.com/sbt/sbt/releases/download/v1.6.0/sbt-1.6.0.tgz && \
+    tar -zxvf sbt-1.6.0.tgz && \
+    mv sbt /usr/share/sbt && \
+    rm sbt-1.6.0.tgz && \
+    export PATH=$PATH:/usr/share/sbt/bin
+
+ENV PATH $PATH:/usr/share/scala/bin
+ENV PATH=$PATH:/usr/share/sbt/bin
+
+# Compila os jobs Scala
+COPY ./spark/jobs /jobs
+RUN /usr/share/sbt/bin/sbt package
+
+# Instalação das dependências do AWS SDK e Jets3t
+RUN curl https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.231/aws-java-sdk-bundle-1.12.231.jar --output /opt/bitnami/spark/jars/aws-java-sdk-bundle-1.12.231.jar
+RUN curl https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.1/hadoop-aws-3.3.1.jar --output /opt/bitnami/spark/jars/hadoop-aws-3.3.1.jar
+RUN curl https://repo1.maven.org/maven2/net/java/dev/jets3t/jets3t/0.9.4/jets3t-0.9.4.jar --output /opt/bitnami/spark/jars/jets3t-0.9.4.jar
+
+# Copia o script Python e o arquivo de requisitos
+COPY ./requirements.txt /
+
+# Instalação das dependências Python
+RUN pip install -r /requirements.txt
+
+USER 1001

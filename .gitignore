@@ -1,0 +1,43 @@
+# Ignorar arquivos relacionados a Bloop
+.bloop/
+.project.bloop/
+.metals/
+
+# Ignorar arquivos relacionados a Scala e SBT
+*.class
+*.log
+*.jar
+*.zip
+*.tar.gz
+target/
+lib_managed/
+project/
+project/target/
+.idea/
+*.iml
+
+# Ignorar arquivos relacionados a Python
+*.pyc
+__pycache__/
+
+# Ignorar arquivos relacionados ao Airflow
+airflow/
+*.airflowignore
+
+# Ignorar arquivos relacionados ao Spark
+*.spark-events/
+logs/
+work/
+output/
+test-output/
+
+# Ignorar arquivos relacionados ao Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Ignorar arquivos relacionados ao Docker
+#*.env
+
+# Ignorar arquivos relacionados a dependências
+node_modules/
+bower_components/
